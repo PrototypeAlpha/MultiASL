@@ -74,7 +74,7 @@ state("soma_nosteam", "NoSteam 1.51")
 init
 {
 	version="";
-	vars.split = "";
+	//vars.split = "";
 	
 	if(game.ProcessName == "Penumbra"){
 		if(Directory.Exists(modules.First().FileName.TrimEnd("penumbra.exe".ToCharArray())+"gui"))
@@ -88,7 +88,7 @@ init
 	}
 	else if((game.ProcessName == "Penumbra" && version=="BP") || game.ProcessName == "aamfp"){
 		// Stores previous game time for RTA runs
-		vars.loadedTime = 0; 
+		//vars.loadedTime = 0; 
 		// Stores previous map for RTA runs
 		vars.lastValidMap = " ";
 	}
@@ -120,7 +120,8 @@ init
 
 isLoading
 {
-	if(game.ProcessName == "Penumbra" && version!="BP"){
+	if(timer.CurrentSplit.Name.ToLower().Contains("setup")) return true;
+	else if(game.ProcessName == "Penumbra" && version!="BP"){
 		if(old.loading == 0 && current.loading != 0)
 		{
 			vars.psycho_loading_active = true;
@@ -133,7 +134,7 @@ isLoading
 		return (current.loading == 0) || vars.psycho_loading_active;
 	}
 	else if ((game.ProcessName == "Penumbra" && version=="BP") || game.ProcessName == "aamfp")
-        return true;
+		return current.gameTime == old.gameTime;
 	else if(game.ProcessName == "Requiem" && !timer.CurrentSplit.Name.ToLower().Contains("setup")) return current.loading == 0;
 	else if(game.ProcessName.StartsWith("Soma")) return current.loading;
 }
@@ -146,7 +147,7 @@ start
 	else if(game.ProcessName == "Requiem") return current.loading == 8 && old.loading == 0;
 	else if(game.ProcessName == "aamfp"){
 		// Reset the variables while not in a run
-		vars.loadedTime = 0;
+		//vars.loadedTime = 0;
 		vars.lastValidMap = " ";
 		return current.gameTime >= 76 && old.gameTime <= 76 && current.map == "Mansion01";
 	}
@@ -169,8 +170,8 @@ update
 				vars.lastValidMap = old.map;
 		
 			// We just came from the menu, save the old times for RTA
-			if (current.gameTime == 0)
-				vars.loadedTime += old.gameTime;
+			//if (current.gameTime == 0)
+			//	vars.loadedTime += old.gameTime;
 				
 			if (game.ProcessName == "aamfp" && old.map != current.map)
 				print("[AAMFP] Map: "+current.map+" (from "+vars.lastValidMap+")");
@@ -178,18 +179,6 @@ update
 	}
 	if(game.ProcessName.StartsWith("Soma") && old.map != current.map)
 		print("[SOMA] Map: "+current.map+" (from "+old.map+")");
-}
-
-gameTime
-{
-	if (timer.CurrentPhase!=TimerPhase.NotRunning && !timer.CurrentSplit.Name.ToLower().Contains("setup")){
-		if((game.ProcessName == "Penumbra" && version=="BP") || game.ProcessName == "aamfp"){
-			if(current.gameTime == old.gameTime)
-				timer.IsGameTimePaused=true;
-			else timer.IsGameTimePaused=false;
-			return;
-		}
-	}
 }
 
 split
@@ -209,8 +198,6 @@ split
 	}
 	else if(game.ProcessName == "aamfp"){
 		if(timer.CurrentPhase!=TimerPhase.NotRunning && timer.CurrentSplit.Name.ToLower().Contains("setup")){
-			if(current.gameTime != old.gameTime)
-				print("[AAMFP] IGT: "+current.gameTime);
 			return current.gameTime >= 76 && old.gameTime <= 76 && current.map == "Mansion01";
 		}
 		return current.map != null && current.map != "" && vars.lastValidMap != current.map;
