@@ -171,21 +171,11 @@ isLoading
 	}
 	
 	else if ((game.ProcessName == "Penumbra" && version=="BP") || game.ProcessName == "aamfp")
-		return true;
+		return current.gameTime == old.gameTime;
 	
 	else if(game.ProcessName == "Requiem") return current.loading == 0;
 	
 	else if(game.ProcessName == "Amnesia" || game.ProcessName.StartsWith("Soma")) return current.loading;
-	
-}
-
-gameTime
-{
-	
-	if(timer.CurrentSplit.Name.ToLower().Contains("setup")) return;
-	
-	if ((game.ProcessName == "Penumbra" && version=="BP") || game.ProcessName == "aamfp")
-		return timer.CurrentTime.GameTime.GetValueOrDefault() + TimeSpan.FromSeconds((current.gameTime-old.gameTime)+vars.loadedTime);
 	
 }
 
