@@ -95,6 +95,8 @@ startup
 	settings.Add("split3.1", true, "BioShock Infinite: Burial at Sea 1", "split");
 	settings.Add("split3.2", true, "BioShock Infinite: Burial at Sea 2", "split");
 	*/
+	settings.Add("setup", true, "Enable \"setup\" splits game time pausing");
+	settings.Add("newloads", true, "Use new load removal method");
 }
 
 init
@@ -208,7 +210,7 @@ start
 
 isLoading
 {
-	if(timer.CurrentSplit.Name.ToLower().Contains("setup"))
+	if(settings["setup"] && timer.CurrentSplit.Name.ToLower().Contains("setup"))
 		return true;
 	
 	switch(game.ProcessName.ToLower())
@@ -225,12 +227,12 @@ isLoading
 			if (current.isMapLoading != -1)
 				return true;
 			
+			if (settings["newloads"] && current.loadingScreen > 0)
+				return true;
+			
 			var count = current.overlaysCount;
 			if (count < 0 || count > 8)
 				return false;
-			
-			//if (current.loadingScreen > 0)
-			//  return true;
 				
 			for(var i = 0; i < count; i++) {    
 				var overlayPtr = memory.ReadValue<int>(new IntPtr(current.overlaysPtr+(i*4)));
