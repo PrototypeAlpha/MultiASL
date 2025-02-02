@@ -51,7 +51,7 @@ state("BioshockInfinite")
 	int   overlaysCount : 0x1415A30, 0x128;
 	byte  afterLogo     : 0x135697C;
 	long  area          : 0x1423D18, 0x124, 0x1A4;
-	//int   loadingScreen : 0x137CF94, 0x3BC, 0x19C;
+	int   loadingScreen : 0x137CF94, 0x3BC, 0x19C;
 }
 state("BioshockInfinite", "BSI Steam Current")
 {
@@ -60,7 +60,7 @@ state("BioshockInfinite", "BSI Steam Current")
 	int   overlaysCount : 0x0FED290, 0x128;
 	byte  afterLogo     : 0x0F30854;
 	long  area          : 0x1007160, 0x124, 0x1A4;
-	//int   loadingScreen : 0x0FA2B98, 0x3BC, 0x19C;
+	int   loadingScreen : 0x0FA2B98, 0x3BC, 0x19C;
 }
 
 startup
